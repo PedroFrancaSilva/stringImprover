@@ -30,12 +30,19 @@ def handleMessage(ws, message):
         query = stringGenerator.generateScopusString(keywords["keywords"])
         papers = findArticles(ws, keywords, query)
         analiser = StringAnalyser(keywords["bibTex"],keywords["keywords"])
+        print("Analisou")
 
         if(analiser.analysePapers(papers) or stringBase == None):
             stringBase = query
+        
+        print("Analisou 2")
 
         result = sendResult(query, analiser.getSensibility(), analiser.getPrecision())
+
+        print("Tem resultado = " + result)
         ws.send(result)
+        
+        print("enviou")
 
 def findArticles(websocket, keywords, query):
     searcher = PaperSearcher()
