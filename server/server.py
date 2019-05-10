@@ -7,9 +7,9 @@ import datetime
 import random
 import websockets
 import json
-from StringImprover import *
-from PaperSearcher import *
-from StringGenerator import *
+from ..model.StringAnalyser import StringAnalyser
+from ..model.PaperSearcher import PaperSearcher
+from ..model.StringGenerator import StringGenerator
 
 
 async def time(websocket, path):
