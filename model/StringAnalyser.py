@@ -1,8 +1,8 @@
 import bibtexparser
 import nltk
-from Paper import *
 from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
+from model.Paper import Paper
 
 class StringAnalyser:
     __meanKeywords = 0

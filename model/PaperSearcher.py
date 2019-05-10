@@ -1,10 +1,10 @@
 import requests
-from StringGenerator import *
+from model.StringGenerator import StringGenerator
 import math
-from Paper import *
-from StringAnalyser import StringAnalyser
+from model.Paper import Paper
+from model.StringAnalyser import StringAnalyser
 import json
-import xploreapi
+from model.xploreapi import XPLORE
 
 
 class PaperSearcher:
@@ -230,7 +230,7 @@ class PaperSearcher:
         pages = 0
         results = None
 
-        api = xploreapi.XPLORE(self.__API_KEY_IEEE)
+        api = XPLORE(self.__API_KEY_IEEE)
         api.booleanText(query)
         api.maximumResults(200)
         api.startingResult(0)
