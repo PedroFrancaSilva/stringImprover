@@ -1,1 +1,1 @@
-web gunicorn -k flask_sockets.worker web-service-stringimprover
+web gunicorn -k flask_sockets.worker server:app
