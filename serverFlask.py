@@ -4,7 +4,6 @@ import json
 from model.StringAnalyser import StringAnalyser
 from model.StringGenerator import StringGenerator
 from model.PaperSearcher import PaperSearcher
-import nltk
 
 
 app = Flask(__name__)
@@ -16,41 +15,28 @@ def scopus_socket(ws):
     print("Conectou")
     while not ws.closed:
         message = ws.receive()
-        handleMessage(ws,message)
+        
+        try:
+            handleMessage(ws,message)
+        except Exception as e: 
+            print(e)
+            ws.send("Wrong Format!!! JSON expected.")
 
 def handleMessage(ws, message):
-    teste = False
-    try:
-       keywords = json.loads(message)
-       teste = True
-    except :
-        ws.send("Wrong Format!!! JSON expected.")
-    
-    if(teste):
-        stringBase = None
-        stringGenerator = StringGenerator()
+    keywords = json.loads(message)
+    stringBase = None
+    stringGenerator = StringGenerator()
 
-        if(message != None):
-            query = stringGenerator.generateScopusString(keywords["keywords"])
-            papers = findArticles(ws, keywords, query)
-            print("Passou find")
-            analiser = StringAnalyser(keywords["bibTex"],keywords["keywords"])
-            print("Analisou")
+    if(message != None):
+        query = stringGenerator.generateScopusString(keywords["keywords"])
+        papers = findArticles(ws, keywords, query)
+        analiser = StringAnalyser(keywords["bibTex"],keywords["keywords"])
 
-            if(analiser.analysePapers(papers) or stringBase == None):
-                stringBase = query
-        
-            print("Analisou 2")
+        if(analiser.analysePapers(papers) or stringBase == None):
+            stringBase = query
 
-            result = sendResult(query, analiser.getSensibility(), analiser.getPrecision())
-
-            print("Tem resultado = " + result)
-            ws.send(result)
-
-            print("enviou")
-
-
-
+        result = sendResult(query, analiser.getSensibility(), analiser.getPrecision())
+        ws.send(result)
 
 def findArticles(websocket, keywords, query):
     searcher = PaperSearcher()
@@ -61,7 +47,6 @@ def findArticles(websocket, keywords, query):
 
     pappers.append(group)
     websocket.send(sendProgress(str(1), str(pages)))
-    print("Passou 1")
 
     for i in range(1, pages):
         print(i)
@@ -70,7 +55,6 @@ def findArticles(websocket, keywords, query):
         find = searcher.searchScopusPapers2(query, start)
         pappers.append(find)
         websocket.send(sendProgress(str(i), str(pages)))
-        print("Passou " + str(i))
     
     return searcher.organizePapersScopus(pappers)
 
