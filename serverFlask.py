@@ -18,9 +18,16 @@ def scopus_socket(ws):
         
         try:
             handleMessage(ws,message)
-        except Exception as e: 
-            print(e)
-            ws.send("Wrong Format!!! JSON expected.")
+        except Exception as e:
+            if(str(e) == "Expecting value: line 1 column 1 (char 0)"): 
+                if(message == "open"):
+                    ws.send("Connection open.")
+                elif(message != "mantain"):
+                    ws.send("Wrong Format!!! JSON expected.")
+            else:
+                print(e)
+                ws.send("Error on server.")
+            
 
 def handleMessage(ws, message):
     keywords = json.loads(message)
