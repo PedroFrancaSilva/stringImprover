@@ -4,6 +4,7 @@ import json
 from model.StringAnalyser import StringAnalyser
 from model.StringGenerator import StringGenerator
 from model.PaperSearcher import PaperSearcher
+import nltk
 
 
 app = Flask(__name__)
@@ -117,5 +118,6 @@ def hello():
 if __name__ == "__main__":
     from gevent import pywsgi
     from geventwebsocket.handler import WebSocketHandler
+    nltk.download('stopwords')
     server = pywsgi.WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
     server.serve_forever()
