@@ -13,6 +13,8 @@ class StringAnalyser:
     __sensibilityTemp = 0
     __precision = -1
     __sensibility = -1
+    __relevantes = []
+    __nRelevantes = []
 
     def __init__(self, bibText, keywords:[]):
         """ Cria um objeto StringAnalyser.
@@ -227,6 +229,9 @@ class StringAnalyser:
             #Se a nova precisão não estiver respeitando os limites    
             if(self.__precisionTemp >= 60 and self.__precision < 60):
                 return False
+        
+        self.__relevantes = len(relevantes)
+        self.__nRelevantes = len(nRelevantes)
 
         return self.compareSensibilityPrecision()
 
@@ -364,3 +369,9 @@ class StringAnalyser:
 
     def getSensibilityTemp(self):
         return self.__sensibilityTemp
+
+    def getRelevant(self):
+        return self.__relevantes
+
+    def getNRelevant(self):
+        return self.__nRelevantes

@@ -42,7 +42,14 @@ def handleMessage(ws, message):
         if(analiser.analysePapers(papers) or stringBase == None):
             stringBase = query
 
-        result = sendResult(query, analiser.getSensibility(), analiser.getPrecision())
+        result = sendResult(
+            query,
+            analiser.getSensibility(),
+            analiser.getPrecision(),
+            analiser.getRelevant(),
+            analiser.getNRelevant()
+            )
+            
         ws.send(result)
 
 def findArticles(websocket, keywords, query):
@@ -53,7 +60,7 @@ def findArticles(websocket, keywords, query):
     pappers = []
 
     pappers.append(group)
-    websocket.send(sendProgress(str(1), str(pages)))
+    websocket.send(sendProgress(str(1), str(pages), getTotalArticles(pappers)))
 
     for i in range(1, pages):
         print(i)
@@ -61,10 +68,16 @@ def findArticles(websocket, keywords, query):
         i = i + 1
         find = searcher.searchScopusPapers2(query, start)
         pappers.append(find)
-        websocket.send(sendProgress(str(i), str(pages)))
+        websocket.send(sendProgress(str(i), str(pages), getTotalArticles(pappers)))
     
     return searcher.organizePapersScopus(pappers)
 
+
+def getTotalArticles(papers):
+    for item in papers:
+            return item['search-results']['opensearch:totalResults']
+
+            
 
 def getString(keywords):
     newKeywords = []
@@ -79,25 +92,30 @@ def getString(keywords):
 
     return newKeywords
 
-def sendProgress(progress, pages):
-    teste = {
+
+def sendProgress(progress, pages, totalArticles):
+    response = {
         "typeMenssage":"progress",
         "progress":progress,
-        "pages":pages
+        "pages":pages,
+        "totalArticles":totalArticles
     }
 
-    return json.dumps(teste)
+    return json.dumps(response)
 
 
-def sendResult(query, sen, pre):
-    teste = {
+
+def sendResult(query, sen, pre, rel, nRel):
+    response = {
         "typeMenssage":"result",
         "query":query,
         "sensitivity":sen,
-        "precision":pre
+        "precision":pre,
+        "relevant":rel,
+        "notRelevant":nRel
     }
 
-    return json.dumps(teste)
+    return json.dumps(response)
 
 
 
