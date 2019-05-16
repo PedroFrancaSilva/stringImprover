@@ -99,7 +99,7 @@ class PaperSearcher:
             lista com os artigos encontrados
         """
         params = {'query': query, 'apiKey': self.__API_KEY_Scopus,
-         'start': page, 'count': 25, 'view':'COMPLETE'}
+         'start': page, 'count': 25, 'view':'COMPLETE', 'subj': 'COMP'}
         proxies = {
             'http':'http://121150130:Peu326598@200.132.146.39:3128',
             'https':'http://121150130:Peu326598@200.132.146.39:3128'
