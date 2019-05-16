@@ -39,7 +39,7 @@ class StringGenerator:
                 stringGerada = stringGerada + ')'
             contKeywords = contKeywords + 1
 
-        stringGerada = stringGerada + ')'
+        stringGerada = stringGerada + '  AND  ( LIMIT-TO ( SUBJAREA ,  “COMP” ))'
         return stringGerada
 
 
