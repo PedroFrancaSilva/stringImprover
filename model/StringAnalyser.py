@@ -236,6 +236,41 @@ class StringAnalyser:
         return self.compareSensibilityPrecision()
 
     
+    def analysePaper(self, paper, relevantes, nRelevantes):
+        total = 0
+        total += self.analysePaperAbstract(paper)
+        total += self.analyseJournalAuthor(paper)
+            
+        if(total >= 0.5):
+            relevantes.append(paper)
+        else:
+            nRelevantes.append(paper)
+
+    
+    def calSenPre(self, relevantes, nRelevantes):
+        #Fórmula da sensibilidade
+        self.__sensibilityTemp = (len(relevantes) /
+         (len(relevantes) + len(self.__goals))) * 100
+
+        #Fórmula da precisão
+        self.__precisionTemp = (len(relevantes) /
+         (len(relevantes) + len(nRelevantes))) * 100
+
+        if(self.__precision != -1 and self.__sensibility != -1):
+            #Se a nova sensibilidade não estiver respeitando os limites
+            if(self.__sensibilityTemp < 80 and self.__sensibility >= 80):
+                return False
+
+            #Se a nova precisão não estiver respeitando os limites    
+            if(self.__precisionTemp >= 60 and self.__precision < 60):
+                return False
+        
+        self.__relevantes = len(relevantes)
+        self.__nRelevantes = len(nRelevantes)
+
+        return self.compareSensibilityPrecision()
+
+    
     def compareSensibilityPrecision(self):
         """ Compara a precisão e a sensibilidade da análise
         anterior com a análise atual.

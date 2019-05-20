@@ -39,7 +39,7 @@ def handleMessage(ws, message):
         papers = findArticles(ws, keywords, query)
         analiser = StringAnalyser(keywords["bibTex"],keywords["keywords"])
 
-        if(analiser.analysePapers(papers) or stringBase == None):
+        if(analysePapers(analiser, papers, ws) or stringBase == None):
             stringBase = query
 
         result = sendResult(
@@ -51,6 +51,21 @@ def handleMessage(ws, message):
             )
             
         ws.send(result)
+
+
+def analysePapers(analiser:StringAnalyser, papers, ws):
+    relevant = []
+    notRelevant = []
+    cont = 0
+
+    for papper in papers:        
+        analiser.analysePaper(papper, relevant, notRelevant)
+        cont += 1
+
+        if((cont/10).is_integer()):
+            ws.send(sendProgressAnalysis(cont))
+    
+    return analiser.calSenPre(relevant, notRelevant)
 
 def findArticles(websocket, keywords, query):
     searcher = PaperSearcher()
@@ -99,6 +114,14 @@ def sendProgress(progress, pages, totalArticles):
         "progress":progress,
         "pages":pages,
         "totalArticles":totalArticles
+    }
+
+    return json.dumps(response)
+
+def sendProgressAnalysis(progress):
+    response = {
+        "typeMenssage":"progressAnalysis",
+        "progress":progress
     }
 
     return json.dumps(response)
