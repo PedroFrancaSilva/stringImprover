@@ -62,7 +62,7 @@ def analysePapers(analiser:StringAnalyser, papers, ws):
         analiser.analysePaper(papper, relevant, notRelevant)
         cont += 1
 
-        if((cont/10).is_integer()):
+        if((cont/50).is_integer()):
             ws.send(sendProgressAnalysis(cont))
     
     return analiser.calSenPre(relevant, notRelevant)
