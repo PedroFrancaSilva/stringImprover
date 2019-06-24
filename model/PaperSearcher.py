@@ -122,13 +122,14 @@ class PaperSearcher:
             lista com os artigos organizados
         """
         newList = []
-        cont = 0    
+        entries = []
 
         for item in papers:
-            entry = item['search-results']['entry']
-            for paper in entry:
-                cont += 1
-                newList.append(self.createPaperScopus(paper))
+            entries.extend(item['search-results']['entry'])
+
+        for paper in entries:
+            newList.append(self.createPaperScopus(paper))
+
         return newList
 
 

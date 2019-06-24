@@ -1,5 +1,6 @@
 import bibtexparser
 import nltk
+import math
 from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from model.Paper import Paper
@@ -124,10 +125,12 @@ class StringAnalyser:
         tokens = self.prepareWords(tokens)
         cont = 0
         
-        for word in tokens:
-            for keyword in self.__keywords:
-                if (word == keyword):
-                    cont += 1
+        self.mergeSort(tokens)
+
+        for keyword in self.__keywords:
+            result =  self.binarySearch(tokens, 0, len(tokens) - 1 , keyword)
+            if (result != -1):
+                cont += 1
 
         return cont
 
@@ -169,17 +172,19 @@ class StringAnalyser:
             comparadas
         """
         newWords = []
+        listWord = []
         stemmer = PorterStemmer()
         stop_words = set(stopwords.words("english"))
 
         #Para comparar melhor as palavras, é necessário retirar
         #as palavras desnecessárias e retirar sufixos
         for item in listWords:
-            newList = nltk.word_tokenize(item)
-            for word in newList:
-                if word not in stop_words:
-                    newWord = stemmer.stem(word)
-                    newWords.append(newWord)
+            listWord.extend(nltk.word_tokenize(item))
+
+        for word in listWord:
+            if word not in stop_words:
+                newWord = stemmer.stem(word)
+                newWords.append(newWord)
         
         newWords = list(set(newWords))
         
@@ -392,7 +397,78 @@ class StringAnalyser:
         
         return total
 
+
+    # Python program for implementation of MergeSort 
+    def mergeSort(self,arr): 
+        if len(arr) >1: 
+            mid = len(arr)//2 #Finding the mid of the array 
+            L = arr[:mid] # Dividing the array elements  
+            R = arr[mid:] # into 2 halves 
+  
+            self.mergeSort(L) # Sorting the first half 
+            self.mergeSort(R) # Sorting the second half 
+  
+            i = j = k = 0
+          
+            # Copy data to temp arrays L[] and R[] 
+            while i < len(L) and j < len(R): 
+                if L[i] < R[j]: 
+                    arr[k] = L[i] 
+                    i+=1
+                else: 
+                    arr[k] = R[j] 
+                    j+=1
+                k+=1
+          
+            # Checking if any element was left 
+            while i < len(L): 
+                arr[k] = L[i] 
+                i+=1
+                k+=1
+          
+            while j < len(R): 
+                arr[k] = R[j] 
+                j+=1
+                k+=1
+  
+    # Code to print the list 
+    def printList(self,arr): 
+        for i in range(len(arr)):         
+            print(arr[i],end=" ") 
+        print() 
+  
     
+    # Python Program for recursive binary search. 
+  
+    # Returns index of x in arr if present, else -1 
+    def binarySearch (self,arr, l, r, x): 
+  
+        # Check base case 
+        if r >= l: 
+  
+            mid = l + (r - l)/2
+            mid = math.floor(mid)
+  
+            # If element is present at the middle itself 
+            if arr[mid] == x: 
+                return mid 
+          
+            # If element is smaller than mid, then it  
+            # can only be present in left subarray 
+            elif arr[mid] > x: 
+                return self.binarySearch(arr, l, mid-1, x) 
+  
+            # Else the element can only be present  
+            # in right subarray 
+            else: 
+                return self.binarySearch(arr, mid + 1, r, x) 
+  
+        else: 
+            # Element is not present in the array 
+            return -1
+  
+  
+
     def getPrecision(self):
         return self.__precision
 
