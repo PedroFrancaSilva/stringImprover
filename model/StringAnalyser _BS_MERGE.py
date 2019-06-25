@@ -123,7 +123,14 @@ class StringAnalyser:
             Número de keywords enontrados dentro do abstract
         """
         tokens = self.prepareWords(tokens)
-        cont = self.KMPSearch(tokens, self.__keywords) 
+        cont = 0
+        
+        self.mergeSort(tokens)
+
+        for keyword in self.__keywords:
+            result =  self.binarySearch(tokens, 0, len(tokens) - 1 , keyword)
+            if (result != -1):
+                cont += 1
 
         return cont
 
@@ -461,67 +468,6 @@ class StringAnalyser:
             return -1
   
   
-    # Python program for KMP Algorithm 
-    # Python program for KMP Algorithm 
-    def KMPSearch(self,keywords, words): 
-        cont = 0
-        M = len(keywords) 
-        N = len(words) 
-  
-        # create lps[] that will hold the longest prefix suffix  
-        # values for keywordstern 
-        lps = [0]*M 
-        j = 0 # index for keywords[] 
-  
-        # Preprocess the keywordstern (calculate lps[] array) 
-        self.computeLPSArray(keywords, M, lps) 
-  
-        i = 0 # index for words[] 
-        while i < N: 
-            if keywords[j] == words[i]: 
-                i += 1
-                j += 1
-  
-            if j == M: 
-                # print "Found keywordstern at index " + str(i-j) 
-                j = lps[j-1] 
-  
-            # mismatch after j matches 
-            elif i < N and keywords[j] != words[i]: 
-                # Do not match lps[0..lps[j-1]] characters, 
-                # they will match anyway 
-                if j != 0: 
-                    j = lps[j-1] 
-                else: 
-                    i += 1
-        return cont
-
-    def computeLPSArray(self, words, M, lps): 
-    	len = 0 # length of the previous longest prefix suffix 
-
-    	lps[0] # lps[0] is always 0 
-    	i = 1
-
-    	# the loop calculates lps[i] for i = 1 to M-1 
-    	while i < M: 
-    		if words[i]== words[len]: 
-    			len += 1
-    			lps[i] = len
-    			i += 1
-    		else: 
-    			# This is tricky. Consider the example. 
-    			# AAACAAAA and i = 7. The idea is similar 
-    			# to search step. 
-    			if len != 0: 
-    				len = lps[len-1] 
-
-    				# Also, note that we do not increment i here 
-    			else: 
-    				lps[i] = 0
-    				i += 1
-
-
-
 
     def getPrecision(self):
         return self.__precision

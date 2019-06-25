@@ -1,6 +1,5 @@
 import bibtexparser
 import nltk
-import math
 from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from model.Paper import Paper
@@ -123,7 +122,12 @@ class StringAnalyser:
             Número de keywords enontrados dentro do abstract
         """
         tokens = self.prepareWords(tokens)
-        cont = self.KMPSearch(tokens, self.__keywords) 
+        cont = 0
+        
+        for word in tokens:
+            for keyword in self.__keywords:
+                if (word == keyword):
+                    cont += 1
 
         return cont
 
@@ -165,19 +169,17 @@ class StringAnalyser:
             comparadas
         """
         newWords = []
-        listWord = []
         stemmer = PorterStemmer()
         stop_words = set(stopwords.words("english"))
 
         #Para comparar melhor as palavras, é necessário retirar
         #as palavras desnecessárias e retirar sufixos
         for item in listWords:
-            listWord.extend(nltk.word_tokenize(item))
-
-        for word in listWord:
-            if word not in stop_words:
-                newWord = stemmer.stem(word)
-                newWords.append(newWord)
+            newList = nltk.word_tokenize(item)
+            for word in newList:
+                if word not in stop_words:
+                    newWord = stemmer.stem(word)
+                    newWords.append(newWord)
         
         newWords = list(set(newWords))
         
@@ -390,139 +392,7 @@ class StringAnalyser:
         
         return total
 
-
-    # Python program for implementation of MergeSort 
-    def mergeSort(self,arr): 
-        if len(arr) >1: 
-            mid = len(arr)//2 #Finding the mid of the array 
-            L = arr[:mid] # Dividing the array elements  
-            R = arr[mid:] # into 2 halves 
-  
-            self.mergeSort(L) # Sorting the first half 
-            self.mergeSort(R) # Sorting the second half 
-  
-            i = j = k = 0
-          
-            # Copy data to temp arrays L[] and R[] 
-            while i < len(L) and j < len(R): 
-                if L[i] < R[j]: 
-                    arr[k] = L[i] 
-                    i+=1
-                else: 
-                    arr[k] = R[j] 
-                    j+=1
-                k+=1
-          
-            # Checking if any element was left 
-            while i < len(L): 
-                arr[k] = L[i] 
-                i+=1
-                k+=1
-          
-            while j < len(R): 
-                arr[k] = R[j] 
-                j+=1
-                k+=1
-  
-    # Code to print the list 
-    def printList(self,arr): 
-        for i in range(len(arr)):         
-            print(arr[i],end=" ") 
-        print() 
-  
     
-    # Python Program for recursive binary search. 
-  
-    # Returns index of x in arr if present, else -1 
-    def binarySearch (self,arr, l, r, x): 
-  
-        # Check base case 
-        if r >= l: 
-  
-            mid = l + (r - l)/2
-            mid = math.floor(mid)
-  
-            # If element is present at the middle itself 
-            if arr[mid] == x: 
-                return mid 
-          
-            # If element is smaller than mid, then it  
-            # can only be present in left subarray 
-            elif arr[mid] > x: 
-                return self.binarySearch(arr, l, mid-1, x) 
-  
-            # Else the element can only be present  
-            # in right subarray 
-            else: 
-                return self.binarySearch(arr, mid + 1, r, x) 
-  
-        else: 
-            # Element is not present in the array 
-            return -1
-  
-  
-    # Python program for KMP Algorithm 
-    # Python program for KMP Algorithm 
-    def KMPSearch(self,keywords, words): 
-        cont = 0
-        M = len(keywords) 
-        N = len(words) 
-  
-        # create lps[] that will hold the longest prefix suffix  
-        # values for keywordstern 
-        lps = [0]*M 
-        j = 0 # index for keywords[] 
-  
-        # Preprocess the keywordstern (calculate lps[] array) 
-        self.computeLPSArray(keywords, M, lps) 
-  
-        i = 0 # index for words[] 
-        while i < N: 
-            if keywords[j] == words[i]: 
-                i += 1
-                j += 1
-  
-            if j == M: 
-                # print "Found keywordstern at index " + str(i-j) 
-                j = lps[j-1] 
-  
-            # mismatch after j matches 
-            elif i < N and keywords[j] != words[i]: 
-                # Do not match lps[0..lps[j-1]] characters, 
-                # they will match anyway 
-                if j != 0: 
-                    j = lps[j-1] 
-                else: 
-                    i += 1
-        return cont
-
-    def computeLPSArray(self, words, M, lps): 
-    	len = 0 # length of the previous longest prefix suffix 
-
-    	lps[0] # lps[0] is always 0 
-    	i = 1
-
-    	# the loop calculates lps[i] for i = 1 to M-1 
-    	while i < M: 
-    		if words[i]== words[len]: 
-    			len += 1
-    			lps[i] = len
-    			i += 1
-    		else: 
-    			# This is tricky. Consider the example. 
-    			# AAACAAAA and i = 7. The idea is similar 
-    			# to search step. 
-    			if len != 0: 
-    				len = lps[len-1] 
-
-    				# Also, note that we do not increment i here 
-    			else: 
-    				lps[i] = 0
-    				i += 1
-
-
-
-
     def getPrecision(self):
         return self.__precision
 
