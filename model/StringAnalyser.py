@@ -153,10 +153,10 @@ class StringAnalyser:
         
         return newList
     
-    def prepareWords(self, listWords):
+    def prepareWords(self, listAbstract):
         """ Prepara palavras para serem comparadas.
         ----------
-        listWords : list
+        listAbstract : list
             Lista de palavras que serão utilizados
 
         Returns
@@ -172,7 +172,7 @@ class StringAnalyser:
 
         #Para comparar melhor as palavras, é necessário retirar
         #as palavras desnecessárias e retirar sufixos
-        for item in listWords:
+        for item in listAbstract:
             listWord.extend(nltk.word_tokenize(item))
         self.mergeSort(stop_words)
         for word in listWord:
