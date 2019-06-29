@@ -124,9 +124,6 @@ class StringAnalyser:
         """
         tokens = self.prepareWords(tokens)
         cont = 0
-        
-        self.mergeSort(tokens)
-
         for keyword in self.__keywords:
             result =  self.binarySearch(tokens, 0, len(tokens) - 1 , keyword)
             if (result != -1):
@@ -171,20 +168,21 @@ class StringAnalyser:
         newWords = []
         listWord = []
         stemmer = PorterStemmer()
-        stop_words = set(stopwords.words("english"))
+        stop_words = list(stopwords.words("english"))
 
         #Para comparar melhor as palavras, é necessário retirar
         #as palavras desnecessárias e retirar sufixos
         for item in listWords:
             listWord.extend(nltk.word_tokenize(item))
-
+        self.mergeSort(stop_words)
         for word in listWord:
-            if word not in stop_words:
+            result =  self.binarySearch(stop_words, 0, len(stop_words) - 1 , word)
+            if (result == -1):
                 newWord = stemmer.stem(word)
                 newWords.append(newWord)
         
         newWords = list(set(newWords))
-        
+        self.mergeSort(newWords)
         return newWords
     
     
@@ -361,9 +359,9 @@ class StringAnalyser:
         contTotal = 0
         tokens = nltk.word_tokenize(paper.abstract)
         tokens = self.prepareWords(tokens)
-
-        for token in tokens:
-            if token in self.__keywords:
+        for keyword in self.__keywords:
+            result =  self.binarySearch(tokens, 0, len(tokens) - 1 , keyword)
+            if (result != -1):
                 contTotal += 1
             
         if(contTotal >= self.__meanKeywords):
