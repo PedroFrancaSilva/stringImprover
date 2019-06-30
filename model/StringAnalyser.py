@@ -91,11 +91,10 @@ class StringAnalyser:
 
     
     def analyseAbstract(self,bibtexObject):
-        """ Analisa um conjunto de abstracts para determinar
-        a média de keywords encontradas.
-        ----------
-        bibtexObject : Json
-            Objeto pra se buscar o abstract
+        """ Compara o abstract dos artigos Scopus com o abstract dos artigos .bib
+         tokens: lista de palavras do abstract
+        _keywords: lista de keywords do .bib de artigos relevantes
+         contTotal: Numero de keywords enontrados dentro do abstract
         """
         contObject = 0
         totalcont = 0
@@ -393,19 +392,19 @@ class StringAnalyser:
         return total
 
 
-    # Python program for implementation of MergeSort 
+    
     def mergeSort(self,arr): 
         if len(arr) >1: 
-            mid = len(arr)//2 #Finding the mid of the array 
-            L = arr[:mid] # Dividing the array elements  
-            R = arr[mid:] # into 2 halves 
+            mid = len(arr)//2 # encontrando meio da lista
+            L = arr[:mid] # Dividindo lista em duas partes
+            R = arr[mid:] 
   
-            self.mergeSort(L) # Sorting the first half 
-            self.mergeSort(R) # Sorting the second half 
+            self.mergeSort(L) # organizando primeira metade
+            self.mergeSort(R) # organizando segunda metade
   
             i = j = k = 0
           
-            # Copy data to temp arrays L[] and R[] 
+            # usando listas de apoio L[] and R[] 
             while i < len(L) and j < len(R): 
                 if L[i] < R[j]: 
                     arr[k] = L[i] 
@@ -415,7 +414,7 @@ class StringAnalyser:
                     j+=1
                 k+=1
           
-            # Checking if any element was left 
+            # checa se algum elemento não foi ordenado 
             while i < len(L): 
                 arr[k] = L[i] 
                 i+=1
@@ -433,33 +432,32 @@ class StringAnalyser:
         print() 
   
     
-    # Python Program for recursive binary search. 
-  
-    # Returns index of x in arr if present, else -1 
+    # Retorna -1 se palavra nao for encontrada 
     def binarySearch (self,arr, l, r, x): 
   
-        # Check base case 
+        # Checa base case 
         if r >= l: 
   
             mid = l + (r - l)/2
             mid = math.floor(mid)
   
-            # If element is present at the middle itself 
+            # checa elemento do meio 
             if arr[mid] == x: 
                 return mid 
           
-            # If element is smaller than mid, then it  
-            # can only be present in left subarray 
+            # checa se o elemento for menor 
+            # divide vetor do lado esquerdo 
             elif arr[mid] > x: 
                 return self.binarySearch(arr, l, mid-1, x) 
   
-            # Else the element can only be present  
-            # in right subarray 
+            # checa se o elemento for maior 
+            # divide vetor do lado direito 
+            
             else: 
                 return self.binarySearch(arr, mid + 1, r, x) 
   
         else: 
-            # Element is not present in the array 
+            # elemento não encontrado
             return -1
   
   
